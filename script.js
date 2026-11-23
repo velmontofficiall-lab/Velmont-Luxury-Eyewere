@@ -37,13 +37,13 @@ function renderProducts(){
 function saveCart(){localStorage.setItem("velmont-cart",JSON.stringify(cart));renderCart();}
 function addToCart(id){const found=cart.find(x=>x.id===id);if(found)found.qty++;else cart.push({id,qty:1});saveCart();showToast("Added to your bag");}
 function changeQty(id, delta) {
-  const item = cart.find(x => x.id === id);
+  const item = cart.find(x => Number(x.id) === Number(id));
   if (!item) return;
 
-  item.qty += delta;
+  item.qty = Number(item.qty || 1) + Number(delta);
 
   if (item.qty <= 0) {
-    cart = cart.filter(x => x.id !== id);
+    cart = cart.filter(x => Number(x.id) !== Number(id));
   }
 
   saveCart();
