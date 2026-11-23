@@ -56,7 +56,36 @@
   <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag" aria-hidden="true">
     <div class="cart-head"><div><p class="eyebrow">YOUR SELECTION</p><h2>Shopping bag</h2></div><button id="closeCart" class="close-button" aria-label="Close bag">×</button></div>
     <div class="cart-items" id="cartItems"><p class="empty-cart">Your bag is waiting for something special.</p></div>
-    <div class="cart-foot"><div class="coupon-row"><input id="couponInput" placeholder="Coupon code" aria-label="Coupon code"><button id="applyCoupon" type="button">APPLY</button></div><p id="couponMessage" class="coupon-message">Try VELMONT10 for 10% off (sample promotion).</p><div class="subtotal"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div><div class="discount-line" id="discountLine" hidden><span>Discount</span><strong id="discountAmount">−₹0</strong></div><div class="subtotal total-line"><span>Estimated total</span><strong id="cartTotal">₹0</strong></div><p>Shipping and final charges are confirmed before payment.</p><button class="button button-gold checkout-button" id="checkoutButton">ORDER ON WHATSAPP ↗</button></div>
+
+<div class="cart-foot">
+  <div class="coupon-row">
+    <input id="couponInput" placeholder="Coupon code" aria-label="Coupon code">
+    <button id="applyCoupon" type="button">APPLY</button>
+  </div>
+
+  <p id="couponMessage" class="coupon-message">Try VELMONT10 for 10% off.</p>
+
+  <div class="total-line">
+    <span>Subtotal</span>
+    <strong id="cartSubtotal">₹0</strong>
+  </div>
+
+  <div class="total-line">
+    <span>Discount</span>
+    <strong id="cartDiscount">−₹0</strong>
+  </div>
+
+  <div class="total-line">
+    <span>Estimated total</span>
+    <strong id="cartTotal">₹0</strong>
+  </div>
+
+  <p class="fine-print">Shipping and final charges are confirmed before payment.</p>
+
+  <button class="button button-gold checkout-button" id="checkoutButton">
+    ORDER ON WHATSAPP ↗
+  </button>
+</div>
   </aside>
 
   <div class="modal-backdrop" id="productModal" aria-hidden="true"><div class="product-modal" role="dialog" aria-modal="true" aria-label="Product details"><button class="modal-close" data-close-modal aria-label="Close">×</button><div id="productModalContent"></div></div></div>
