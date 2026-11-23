@@ -70,3 +70,156 @@ document.getElementById("year").textContent=new Date().getFullYear();
 document.getElementById("menuToggle").addEventListener("click",()=>document.getElementById("mainNav").classList.toggle("open"));
 document.querySelectorAll("#mainNav a").forEach(a=>a.addEventListener("click",()=>document.getElementById("mainNav").classList.remove("open")));
 renderProducts();renderCart();
+// ===== VELMONT PREMIUM UPGRADE =====
+
+// Save wishlist
+let wishlist = JSON.parse(localStorage.getItem("velmont-wishlist") || "[]");
+
+function saveWishlist() {
+  localStorage.setItem("velmont-wishlist", JSON.stringify(wishlist));
+  updateWishlistCount();
+}
+
+function updateWishlistCount() {
+  const btn = document.getElementById("openWishlist");
+  if (btn) {
+    const count = btn.querySelector("span");
+    if (count) count.textContent = wishlist.length;
+  }
+}
+
+// Modal helpers
+function showModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+  }
+}
+
+function hideModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+  }
+}
+
+// Wishlist display
+function renderWishlist() {
+  const modal = document.querySelector("#wishlistModal .wishlist-modal");
+  if (!modal) return;
+
+  const items = products.filter(p => wishlist.includes(p.id));
+
+  modal.innerHTML = `
+    <button class="modal-close" onclick="hideModal('wishlistModal')">×</button>
+    <p class="eyebrow">YOUR FAVOURITES</p>
+    <h2>My Wishlist</h2>
+    ${items.length ? items.map(p => `
+      <div class="wishlist-item">
+        <img src="${p.image}" alt="${p.name}" style="width:75px;height:75px;object-fit:cover">
+        <div>
+          <h3>${p.name}</h3>
+          <p>${money(p.price)}</p>
+          <button onclick="addToCartFromWishlist(${p.id})">ADD TO BAG</button>
+          <button onclick="removeWishlist(${p.id})">REMOVE</button>
+        </div>
+      </div>
+    `).join("") : "<p>Your wishlist is waiting for something special.</p>"}
+  `;
+}
+
+function removeWishlist(id) {
+  wishlist = wishlist.filter(x => x !== id);
+  saveWishlist();
+  renderWishlist();
+}
+
+function addToCartFromWishlist(id) {
+  addToCart(id);
+  openCart();
+}
+
+// Product quick view
+function showProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+
+  const modal = document.querySelector("#productModal .product-modal");
+  if (!modal) return;
+
+  modal.innerHTML = `
+    <button class="modal-close" onclick="hideModal('productModal')">×</button>
+    <img src="${p.image}" alt="${p.name}" style="width:100%;max-height:320px;object-fit:cover">
+    <p class="eyebrow">${p.category}</p>
+    <h2>${p.name}</h2>
+    <p>${p.desc}</p>
+    <h3>${money(p.price)}</h3>
+    <button class="button button-gold" onclick="addToCart(${p.id});hideModal('productModal')">ADD TO BAG</button>
+    <button onclick="toggleWishlist(${p.id})">♡ SAVE TO WISHLIST</button>
+  `;
+
+  showModal("productModal");
+}
+
+function toggleWishlist(id) {
+  if (wishlist.includes(id)) {
+    wishlist = wishlist.filter(x => x !== id);
+    showToast("Removed from wishlist");
+  } else {
+    wishlist.push(id);
+    showToast("Saved to wishlist ❤️");
+  }
+
+  saveWishlist();
+  renderWishlist();
+}
+
+// Add premium buttons to product cards
+function enhanceProductCards() {
+  document.querySelectorAll("#productGrid .product-card").forEach(card => {
+    if (card.dataset.premiumReady) return;
+
+    card.dataset.premiumReady = "true";
+
+    const name = card.querySelector(".product-name")?.textContent.trim();
+    const p = products.find(x => x.name === name);
+    if (!p) return;
+
+    const actions = document.createElement("div");
+    actions.className = "detail-actions";
+
+    actions.innerHTML = `
+      <button onclick="showProduct(${p.id})">QUICK VIEW</button>
+      <button onclick="toggleWishlist(${p.id})">♡</button>
+    `;
+
+    card.appendChild(actions);
+  });
+}
+
+// Product grid observer
+const productObserver = new MutationObserver(enhanceProductCards);
+if (productGrid) {
+  productObserver.observe(productGrid, {childList:true, subtree:true});
+}
+
+// Wishlist button
+document.getElementById("openWishlist")?.addEventListener("click", () => {
+  renderWishlist();
+  showModal("wishlistModal");
+});
+
+// Close modals
+document.querySelectorAll(".modal-backdrop").forEach(modal => {
+  modal.addEventListener("click", e => {
+    if (e.target === modal) hideModal(modal.id);
+  });
+});
+
+// Initialize
+saveWishlist();
+enhanceProductCards();
+
+console.log("VELMONT PREMIUM FEATURES READY");
