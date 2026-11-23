@@ -129,8 +129,11 @@ document.getElementById("checkoutButton").addEventListener("click",()=>{
   if(!cart.length){showToast("Your bag is empty");return;}
   if(STORE_CONFIG.whatsappNumber.includes("X")){showToast("Add your WhatsApp number in script.js first");return;}
   const lines=cart.map(x=>{const p=products.find(y=>y.id===x.id);return `${p.name} (${p.category}) x ${x.qty} — ${money(p.price*x.qty)}`;});
-  const total=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).price*x.qty,0);
-  const message=`Hello Velmont! I'd like to place an order:\n\n${lines.join("\n")}\n\nSubtotal: ${money(total)}\n\nPlease confirm availability, shipping and final amount.`;
+  const subtotal = cart.reduce((s,x) => s + products.find(p => p.id === x.id).price * x.qty, 0);
+const discount = couponApplied ? subtotal * 0.10 : 0;
+const total = subtotal - discount;
+
+const message = `Hello Velmont! I'd like to place an order:\n\n${lines.join("\n")}\n\nSubtotal: ${money(subtotal)}\nDiscount: ${money(discount)}\nEstimated Total: ${money(total)}\n\nPlease confirm availability, shipping and final amount.`;.`;
   window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`,"_blank","noopener");
 });
 // VELMONT COUPON SYSTEM
