@@ -17,6 +17,7 @@ const products = [
 
 let activeFilter = "All";
 let cart = JSON.parse(localStorage.getItem("velmont-cart") || "[]");
+let couponApplied = false;
 const productGrid = document.getElementById("productGrid");
 const cartDrawer = document.getElementById("cartDrawer");
 const cartOverlay = document.getElementById("cartOverlay");
@@ -35,16 +36,53 @@ function renderProducts(){
 }
 function saveCart(){localStorage.setItem("velmont-cart",JSON.stringify(cart));renderCart();}
 function addToCart(id){const found=cart.find(x=>x.id===id);if(found)found.qty++;else cart.push({id,qty:1});saveCart();showToast("Added to your bag");}
-function changeQty(id,delta){const item=cart.find(x=>x.id===id);if(!item)return;item.qty+=delta;if(item.qty<=0)cart=cart.filter(x=>x.id!==id);saveCart();}
 function renderCart(){
-  const count=cart.reduce((s,x)=>s+x.qty,0);
-  document.getElementById("cartCount").textContent=count;
-  const subtotal=cart.reduce((s,x)=>s+(products.find(p=>p.id===x.id)?.price||0)*x.qty,0);
-  document.getElementById("cartSubtotal").textContent=money(subtotal);
-  const holder=document.getElementById("cartItems");
-  holder.innerHTML=cart.length?cart.map(x=>{const p=products.find(y=>y.id===x.id);return `<div class="cart-item"><img src="${p.image}" alt=""><div><strong>${p.name}</strong><small>${money(p.price)}</small><div class="qty-controls"><button data-qty="${p.id}" data-delta="-1">−</button><span>${x.qty}</span><button data-qty="${p.id}" data-delta="1">+</button></div></div><button class="remove-item" data-remove="${p.id}" aria-label="Remove ${p.name}">×</button></div>`}).join(""):`<p class="empty-cart">Your bag is waiting for something special.</p>`;
-  holder.querySelectorAll("[data-qty]").forEach(b=>b.addEventListener("click",()=>changeQty(Number(b.dataset.qty),Number(b.dataset.delta))));
-  holder.querySelectorAll("[data-remove]").forEach(b=>b.addEventListener("click",()=>changeQty(Number(b.dataset.remove),-999)));
+  const count = cart.reduce((s,x)=>s+x.qty,0);
+  document.getElementById("cartCount").textContent = count;
+
+  const subtotal = cart.reduce((s,x)=>
+    s + (products.find(p=>p.id===x.id)?.price || 0) * x.qty,0
+  );
+
+  const discount = couponApplied ? subtotal * 0.10 : 0;
+  const total = subtotal - discount;
+
+  document.getElementById("cartSubtotal").textContent = money(subtotal);
+  document.getElementById("cartDiscount").textContent = "-" + money(discount);
+  document.getElementById("cartTotal").textContent = money(total);
+
+  const holder = document.getElementById("cartItems");
+
+  holder.innerHTML = cart.length ? cart.map(x=>{
+    const p = products.find(y=>y.id===x.id);
+    if(!p) return "";
+    return `<div class="cart-item">
+      <img src="${p.image}" alt="">
+      <div>
+        <strong>${p.name}</strong>
+        <small>${money(p.price)}</small>
+      </div>
+      <div class="qty-controls">
+        <button data-qty="${p.id}" data-delta="-1">−</button>
+        <span>${x.qty}</span>
+        <button data-qty="${p.id}" data-delta="1">+</button>
+      </div>
+      <button data-remove="${p.id}">×</button>
+    </div>`;
+  }).join("") : '<p class="empty-cart">Your bag is waiting for something special.</p>';
+
+  holder.querySelectorAll("[data-qty]").forEach(b=>
+    b.addEventListener("click",()=>changeQty(
+      Number(b.dataset.qty),Number(b.dataset.delta)
+    ))
+  );
+
+  holder.querySelectorAll("[data-remove]").forEach(b=>
+    b.addEventListener("click",()=>changeQty(
+      Number(b.dataset.remove),-999
+    ))
+  );
+}()=>changeQty(Number(b.dataset.remove),-999)));
 }
 function openCart(){cartDrawer.classList.add("open");cartOverlay.classList.add("open");cartDrawer.setAttribute("aria-hidden","false");}
 function closeCart(){cartDrawer.classList.remove("open");cartOverlay.classList.remove("open");cartDrawer.setAttribute("aria-hidden","true");}
@@ -64,6 +102,23 @@ document.getElementById("checkoutButton").addEventListener("click",()=>{
   const message=`Hello Velmont! I'd like to place an order:\n\n${lines.join("\n")}\n\nSubtotal: ${money(total)}\n\nPlease confirm availability, shipping and final amount.`;
   window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`,"_blank","noopener");
 });
+// VELMONT COUPON SYSTEM
+document.getElementById("applyCoupon").addEventListener("click",()=>{
+  const code = document.getElementById("couponInput").value.trim().toUpperCase();
+
+  if(code === "VELMONT10"){
+    couponApplied = true;
+    document.getElementById("couponMessage").textContent =
+      "10% discount applied successfully!";
+  } else {
+    couponApplied = false;
+    document.getElementById("couponMessage").textContent =
+      "Invalid coupon code.";
+  }
+
+  renderCart();
+});
+
 document.getElementById("instagramLink").href=STORE_CONFIG.instagramUrl;
 document.getElementById("footerInstagram").href=STORE_CONFIG.instagramUrl;
 document.getElementById("year").textContent=new Date().getFullYear();
