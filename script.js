@@ -82,7 +82,6 @@ function renderCart(){
       Number(b.dataset.remove),-999
     ))
   );
-}()=>changeQty(Number(b.dataset.remove),-999)));
 }
 function openCart(){cartDrawer.classList.add("open");cartOverlay.classList.add("open");cartDrawer.setAttribute("aria-hidden","false");}
 function closeCart(){cartDrawer.classList.remove("open");cartOverlay.classList.remove("open");cartDrawer.setAttribute("aria-hidden","true");}
