@@ -76,7 +76,7 @@ function renderCart(){
       </div>
       <div class="qty-controls">
         <button type="button" data-qty="${p.id}" data-delta="-1">−</button>
-
+<span>${x.qty}</span>
 <button type="button" data-qty="${p.id}" data-delta="1">+</button>
       </div>
       <button data-remove="${p.id}">×</button>
