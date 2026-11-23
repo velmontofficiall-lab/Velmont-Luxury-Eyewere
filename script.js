@@ -77,11 +77,13 @@ function renderCart(){
     ))
   );
 
-  holder.querySelectorAll("[data-remove]").forEach(b=>
-    b.addEventListener("click",()=>changeQty(
-      Number(b.dataset.remove),-999
-    ))
-  );
+  holder.querySelectorAll("[data-remove]").forEach(b => {
+  b.addEventListener("click", () => {
+    const id = Number(b.dataset.remove);
+    cart = cart.filter(item => item.id !== id);
+    saveCart();
+  });
+});
 }
 function openCart(){cartDrawer.classList.add("open");cartOverlay.classList.add("open");cartDrawer.setAttribute("aria-hidden","false");}
 function closeCart(){cartDrawer.classList.remove("open");cartOverlay.classList.remove("open");cartDrawer.setAttribute("aria-hidden","true");}
