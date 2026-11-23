@@ -83,19 +83,29 @@ function renderCart(){
     </div>`;
   }).join("") : '<p class="empty-cart">Your bag is waiting for something special.</p>';
 
-  holder.querySelectorAll("[data-qty]").forEach(b=>
-    b.addEventListener("click",()=>changeQty(
-      Number(b.dataset.qty),Number(b.dataset.delta)
-    ))
-  );
+  
+holder.onclick = (e) => {
+  const btn = e.target.closest("button");
+  if (!btn || !holder.contains(btn)) return;
 
-  holder.querySelectorAll("[data-remove]").forEach(b => {
-  b.addEventListener("click", () => {
-    const id = Number(b.dataset.remove);
-    cart = cart.filter(item => item.id !== id);
+  if (btn.hasAttribute("data-qty")) {
+    e.preventDefault();
+
+    changeQty(
+      Number(btn.dataset.qty),
+      Number(btn.dataset.delta)
+    );
+    return;
+  }
+
+  if (btn.hasAttribute("data-remove")) {
+    e.preventDefault();
+
+    const id = Number(btn.dataset.remove);
+    cart = cart.filter(item => Number(item.id) !== id);
     saveCart();
-  });
-});
+  }
+};
 }
 function openCart(){cartDrawer.classList.add("open");cartOverlay.classList.add("open");cartDrawer.setAttribute("aria-hidden","false");}
 function closeCart(){cartDrawer.classList.remove("open");cartOverlay.classList.remove("open");cartDrawer.setAttribute("aria-hidden","true");}
