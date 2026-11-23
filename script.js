@@ -75,9 +75,9 @@ function renderCart(){
         <small>${money(p.price)}</small>
       </div>
       <div class="qty-controls">
-        <button data-qty="${p.id}" data-delta="-1">−</button>
-        <span>${x.qty}</span>
-        <button data-qty="${p.id}" data-delta="1">+</button>
+        <button type="button" data-qty="${p.id}" data-delta="-1">−</button>
+
+<button type="button" data-qty="${p.id}" data-delta="1">+</button>
       </div>
       <button data-remove="${p.id}">×</button>
     </div>`;
@@ -91,13 +91,21 @@ holder.onclick = (e) => {
   if (btn.hasAttribute("data-qty")) {
     e.preventDefault();
 
-    changeQty(
-      Number(btn.dataset.qty),
-      Number(btn.dataset.delta)
-    );
+    const id = Number(btn.dataset.qty);
+    const delta = Number(btn.dataset.delta);
+    const item = cart.find(x => Number(x.id) === id);
+
+    if (item) {
+        item.qty = Number(item.qty || 1) + delta;
+
+        if (item.qty <= 0) {
+            cart = cart.filter(x => Number(x.id) !== id);
+        }
+
+        saveCart();
+    }
     return;
   }
-
   if (btn.hasAttribute("data-remove")) {
     e.preventDefault();
 
@@ -106,7 +114,7 @@ holder.onclick = (e) => {
     saveCart();
   }
 };
-}
+} 
 function openCart(){cartDrawer.classList.add("open");cartOverlay.classList.add("open");cartDrawer.setAttribute("aria-hidden","false");}
 function closeCart(){cartDrawer.classList.remove("open");cartOverlay.classList.remove("open");cartDrawer.setAttribute("aria-hidden","true");}
 function showToast(message){toast.textContent=message;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1800);}
