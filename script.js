@@ -36,6 +36,18 @@ function renderProducts(){
 }
 function saveCart(){localStorage.setItem("velmont-cart",JSON.stringify(cart));renderCart();}
 function addToCart(id){const found=cart.find(x=>x.id===id);if(found)found.qty++;else cart.push({id,qty:1});saveCart();showToast("Added to your bag");}
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+
+  item.qty += delta;
+
+  if (item.qty <= 0) {
+    cart = cart.filter(x => x.id !== id);
+  }
+
+  saveCart();
+}
 function renderCart(){
   const count = cart.reduce((s,x)=>s+x.qty,0);
   document.getElementById("cartCount").textContent = count;
