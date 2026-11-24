@@ -6,7 +6,7 @@ const STORE_CONFIG = {
 
 const products = [
   {id:1,name:"Aviator One",category:"Sunglasses",price:899,tag:"BESTSELLER",desc:"Classic metal-frame inspired silhouette.",image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=700&q=85"},
-  {id:2,name:"Noir Square",category:"Sunglasses",price:999,tag:"NEW EDIT",desc:"A confident shape for everyday styling.",image:"https://images.unsplash.com/photo-1760446032732-c042b0d43580?auto=format&fit=crop&w=700&q=85"},
+  {id:2,name:"Noir Square",category:"Sunglasses",price:999,tag:"NEW EDIT",desc:"A confident shape for everyday styling.",image:"https://raw.githubusercontent.com/velmontofficiall-lab/Velmont-Luxury-Eyewere/main/IMG-20261124-WA0042.jpg"},
   {id:3,name:"Modern Round",category:"Sunglasses",price:799,tag:"",desc:"A clean, vintage-inspired look.",image:"https://images.unsplash.com/photo-1508296695146-257a814070b4?auto=format&fit=crop&w=700&q=85"},
   {id:4,name:"Chrono Classic",category:"Watches",price:1499,tag:"FEATURED",desc:"A versatile timepiece for your rotation.",image:"https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=700&q=85"},
   {id:5,name:"Minimal Steel",category:"Watches",price:1799,tag:"",desc:"Understated design with a refined finish.",image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=85"},
