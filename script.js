@@ -133,7 +133,15 @@ document.getElementById("checkoutButton").addEventListener("click",()=>{
 const discount = couponApplied ? subtotal * 0.10 : 0;
 const total = subtotal - discount;
 
-const message = `Hello Velmont! I'd like to place an order:\n\n${lines.join("\n")}\n\nSubtotal: ${money(subtotal)}\nDiscount: ${money(discount)}\nEstimated Total: ${money(total)}\n\nPlease confirm availability, shipping and final amount.`;.`;
+const message = `Hello Velmont! I'd like to place an order:
+
+${lines.join("\n")}
+
+Subtotal: ${money(subtotal)}
+Discount: ${money(discount)}
+Estimated Total: ${money(total)}
+
+Please confirm availability, shipping and final amount.`;
   window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`,"_blank","noopener");
 });
 // VELMONT COUPON SYSTEM
