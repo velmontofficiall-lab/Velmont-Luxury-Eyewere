@@ -318,5 +318,6 @@ document.querySelectorAll(".modal-backdrop").forEach(modal => {
 // Initialize
 saveWishlist();
 enhanceProductCards();
-
+renderProducts();
+renderCart();
 console.log("VELMONT PREMIUM FEATURES READY");
